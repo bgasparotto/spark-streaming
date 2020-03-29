@@ -25,7 +25,7 @@ object PrintTweets {
     val tweets = TwitterUtils.createStream(ssc, None)
 
     // Now extract the text of each status update into RDD's using map()
-    val statuses = tweets.map(status => status.getText)
+    val statuses = tweets.map(status => s"[${status.getUser.getName}]: ${status.getText}")
 
     // Print out the first ten
     statuses.print()
