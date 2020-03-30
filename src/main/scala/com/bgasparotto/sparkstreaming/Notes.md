@@ -10,7 +10,7 @@
 http://bahir.apache.org/ or add the dependency
 `org.apache.bahir" %% "spark-streaming-twitter" % "2.4.0"`
 
-# Streaming intervals
+## Streaming intervals
 - Batch: how often data is ingested for processing;
     - Set up with the StreamingContext.
 - Slide: how often the results will be updated;
@@ -18,19 +18,19 @@ http://bahir.apache.org/ or add the dependency
 - Window: how far back we will look at from the slide interval.
     - Also set up in the reduce operations.
     
-# Fault tolerance
+## Fault tolerance
 - All incoming data is replicated to at least 2 worker nodes;
 - Specially when using stateful operations, we should use a checkpoint directory `ssc.checkpoint()`
 in order to persist and recover the state;
 - HDFS is a good choice for using checkpoints;
 - Checkpoints should be stored externally, not on the same node as the driver.
 
-## Receiver failures
+### Receiver failures
 - If the receiver fails, the data can be lost;
 - If Kafka is pushing data to Spark and the driver script fails, the data can be lost (skipped). In
 this case, pull-based receivers are preferable;
 
-## Driver-script failures
+### Driver-script failures
 - Although works replicate data, the driver can be a single point of failure since it orchestrates
 the process;
 - `StreamingContext.getOrCreate()` is preferred instead of always creating a new context, given it
@@ -40,3 +40,7 @@ present in your checkpoint directory, that means the last execution completed su
     - Kubernetes
     - Spark itself (use -supervise on spark-submit)
     - Zookeeper
+
+## Streaming with RDDs and DataFrames
+- If you intend to perform more than 1 action with your rdd/df, cache it first with `cache()`.
+Persisting the RDD with `persist()` has a similar effect.
