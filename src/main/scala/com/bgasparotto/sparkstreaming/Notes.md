@@ -44,3 +44,4 @@ present in your checkpoint directory, that means the last execution completed su
 ## Streaming with RDDs and DataFrames
 - If you intend to perform more than 1 action with your rdd/df, cache it first with `cache()`.
 Persisting the RDD with `persist()` has a similar effect.
+- The result of a reduceByWindow operation is always a single RDD;
