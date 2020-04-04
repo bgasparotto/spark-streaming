@@ -16,6 +16,12 @@ object LogAlarmer {
 
   def main(args: Array[String]) {
 
+    val logArguments = args
+      .map(_.split("="))
+      .filter(_.length == 2)
+      .map(arg => (arg(0), arg(1)))
+      .toMap
+
     // Create the context with a 1 second batch size
     val ssc = new StreamingContext("local[*]", "LogAlarmer", Seconds(1))
 
@@ -24,9 +30,12 @@ object LogAlarmer {
     // Construct a regular expression (regex) to extract fields from raw Apache log lines
     val pattern = apacheLogPattern()
 
-    // Create a socket stream to read log data published via netcat on port 9999 locally
+    // Create a socket stream to read log data published via netcat
+    val host = logArguments.getOrElse("host", "127.0.0.1")
+    val port = logArguments.getOrElse("port", "9999").toInt
+
     val lines =
-      ssc.socketTextStream("127.0.0.1", 9999, StorageLevel.MEMORY_AND_DISK_SER)
+      ssc.socketTextStream(host, port, StorageLevel.MEMORY_AND_DISK_SER)
 
     // Extract the status field from each log line
     val statuses = lines.map(x => {
@@ -48,9 +57,10 @@ object LogAlarmer {
       }
     })
 
+    val windowSeconds = logArguments.getOrElse("window", "3").toInt
     // Tally up statuses over a 5-minute window sliding every second
     val statusCounts =
-      successFailure.countByValueAndWindow(Seconds(300), Seconds(1))
+      successFailure.countByValueAndWindow(Seconds(windowSeconds), Seconds(3))
 
     // For each batch, get the RDD's representing data from our current window
     statusCounts.foreachRDD((rdd, _) => {
@@ -77,6 +87,11 @@ object LogAlarmer {
         "Total success: " + totalSuccess + " Total failure: " + totalError
       )
 
+      if (totalError + totalSuccess == 0) {
+        println("Wake up! No traffic for a while, the website may be down.")
+      }
+
+      val threshold = logArguments.getOrElse("threshold", "0.5").toDouble
       // Don't alarm unless we have some minimum amount of data to work with
       if (totalError + totalSuccess > 100) {
         // Compute the error rate
@@ -85,7 +100,7 @@ object LogAlarmer {
           totalError.toDouble / totalSuccess.toDouble
         ) getOrElse 1.0
         // If there are more errors than successes, wake someone up
-        if (ratio > 0.5) {
+        if (ratio > threshold) {
           // In real life, you'd use JavaMail or Scala's courier library to send an
           // email that causes somebody's phone to make annoying noises, and you'd
           // make sure these alarms are only sent at most every half hour or something.
