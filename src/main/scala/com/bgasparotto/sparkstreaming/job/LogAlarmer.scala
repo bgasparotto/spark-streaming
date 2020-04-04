@@ -9,8 +9,9 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 /** Monitors a stream of Apache access logs on port 9999, and prints an alarm
   *  if an excessive ratio of errors is encountered.
-  * Before running this class, run `nc -kl 9999 -i 1 < dataset/apache/access_log.txt` on the
-  * terminal from this project's folder.
+  * Before running this class, run:
+  * `while read -r line ; do echo "$line"; sleep 0.001; done < dataset/apache/access_log.txt | nc -kl 9999`
+  * on the terminal from this project's folder.
   */
 object LogAlarmer {
 
