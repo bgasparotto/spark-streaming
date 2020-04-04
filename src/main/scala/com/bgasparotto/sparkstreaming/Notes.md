@@ -45,3 +45,9 @@ present in your checkpoint directory, that means the last execution completed su
 - If you intend to perform more than 1 action with your rdd/df, cache it first with `cache()`.
 Persisting the RDD with `persist()` has a similar effect.
 - The result of a reduceByWindow operation is always a single RDD;
+
+## DStream vs Structured Streaming
+- DStreams are created from the StreamingContext: `new StreamingContext(...)`
+- Structured Streaming dataframes are created from SparkSession: `SparkSession.builder...`
+- Creating a `SparkSession` is similar to opening a database connection, so one should make sure
+the session is closed at the end of the code.
