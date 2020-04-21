@@ -1,11 +1,11 @@
-package com.bgasparotto.sparkstreaming.job.integration
+package com.bgasparotto.sparkstreaming.job.integration.kafka
 
 import java.util.regex.Matcher
 
 import com.bgasparotto.sparkstreaming.infrastructure.LogPattern.apacheLogPattern
 import com.bgasparotto.sparkstreaming.infrastructure.MinimalLogger.setupLogging
 import kafka.serializer.StringDecoder
-import org.apache.spark.streaming.kafka._
+import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 /**
