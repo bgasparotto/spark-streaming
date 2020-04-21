@@ -51,3 +51,12 @@ Persisting the RDD with `persist()` has a similar effect.
 - Structured Streaming dataframes are created from SparkSession: `SparkSession.builder...`
 - Creating a `SparkSession` is similar to opening a database connection, so one should make sure
 the session is closed at the end of the code.
+
+## Integrations
+### Kafka
+- Prior to Spark 1.3, Spark Streaming had to connect to Zookeeper in order to read messages;
+- However, Spark Streaming can connect directly to Kafka since Spark 1.3;
+- It's needed to add the dependency spark-streaming-kafka (it's not built in Spark);
+- When connection to Kafka directly, you have to maintain yourself the list of Kafka brokers, instead 
+  of just connection to the Zookeeper. However, the reliability of the messages (including reprocessing) pays off.
+
