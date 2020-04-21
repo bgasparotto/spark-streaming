@@ -8,7 +8,12 @@ import kafka.serializer.StringDecoder
 import org.apache.spark.streaming.kafka._
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-/** Working example of listening for log data from Kafka's testLogs topic on port 9092. */
+/**
+  * Working example of listening for log data from Kafka's testLogs topic on port 9092.
+  *
+  * Start the docker containers, run this class, then publish the messages from the access_log:
+  * <code>kafkacat -P -b localhost:9092 -t message.apache-server.log < dataset/apache/access_log.txt</code>
+  */
 object KafkaDStreamExample {
 
   def main(args: Array[String]) {
