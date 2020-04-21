@@ -71,3 +71,8 @@ the session is closed at the end of the code.
 - Flume integration with the Hadoop ecosystem is smoother;
 - Kakfa is more reliable;
 - Both can be used together, some projects are doing so.
+
+### Amazon Kinesis
+- Similar to Kafka, but as a service hosted in AWS;
+- Shards have a similar purpose as a Kafka broker;
+- It's needed to add the dependency spark-streaming-kinesis-asl (it's not built in Spark);
