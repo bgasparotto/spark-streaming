@@ -60,3 +60,14 @@ the session is closed at the end of the code.
 - When connection to Kafka directly, you have to maintain yourself the list of Kafka brokers, instead 
   of just connection to the Zookeeper. However, the reliability of the messages (including reprocessing) pays off.
 
+### Apache Flume
+- Similar to Kafka, but tailored for large amounts of log data;
+- Spark can connect to Flume either push or pull based, however, pull is the most recommended:
+    * Data can be lost if the push fails;
+    * You have to set up your receiver into Flume's configuration.
+- To pull messages from Flume, you need to install an extra package Spark Sink on Flume.
+
+### Kafka vs Flume
+- Flume integration with the Hadoop ecosystem is smoother;
+- Kakfa is more reliable;
+- Both can be used together, some projects are doing so.
