@@ -38,13 +38,13 @@ object FlumePullExample {
 
     // Extract the request field from each log line
     val requests = lines.map(x => {
-      val matcher: Matcher = pattern.matcher(x);
+      val matcher: Matcher = pattern.matcher(x)
       if (matcher.matches()) matcher.group(5)
     })
 
     // Extract the URL from the request
     val urls = requests.map(x => {
-      val arr = x.toString.split(" ");
+      val arr = x.toString.split(" ")
       if (arr.size == 3) arr(1) else "[error]"
     })
 
