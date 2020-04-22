@@ -82,3 +82,10 @@ the session is closed at the end of the code.
   1. Create a subclass of `org.apache.spark.streaming.receiver.Receiver`;
   2. Implement `onStart()`, `onStop()` and `receive()` methods;
   3. Create a DStream using `ssc.receiverStream(new CustomReceiver(params))`
+
+### Cassandra as the output
+- Tables should be created with the queries you'll be running later in mind, so they execute really fast;
+- To integrate Spark with Cassandra:
+  1. Add the spark-cassandra-connector dependency;
+  2. Set `spark.cassandra.connection.host` on your spark conf;
+  3. Use `rdd.saveToCassandra` to store tuples into named columns in a specific Cassandra table.
