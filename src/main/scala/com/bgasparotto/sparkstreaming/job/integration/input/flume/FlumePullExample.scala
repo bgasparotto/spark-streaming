@@ -1,6 +1,6 @@
 // Flume setup steps (and more) at http://spark.apache.org/docs/latest/streaming-flume-integration.html
 
-package com.bgasparotto.sparkstreaming.job.integration.flume
+package com.bgasparotto.sparkstreaming.job.integration.input.flume
 
 import java.util.regex.Matcher
 

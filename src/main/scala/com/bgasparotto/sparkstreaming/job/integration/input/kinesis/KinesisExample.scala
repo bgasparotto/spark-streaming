@@ -1,45 +1,46 @@
-package com.bgasparotto.sparkstreaming.job.integration.kafka
+package com.bgasparotto.sparkstreaming.job.integration.input.kinesis
 
 import java.util.regex.Matcher
 
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream
 import com.bgasparotto.sparkstreaming.infrastructure.LogPattern.apacheLogPattern
 import com.bgasparotto.sparkstreaming.infrastructure.MinimalLogger.setupLogging
-import kafka.serializer.StringDecoder
-import org.apache.spark.streaming.kafka.KafkaUtils
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.storage.StorageLevel
+import org.apache.spark.streaming.kinesis.KinesisUtils
+import org.apache.spark.streaming.{Duration, Seconds, StreamingContext}
 
-/**
-  * Working example of listening for log data from Kafka's testLogs topic on port 9092.
+/** Example of connecting to Amazon Kinesis Streaming and listening for log data.
   *
-  * Start the docker containers, run this class, then publish the messages from the access_log:
-  * <code>kafkacat -P -b localhost:9092 -t message.apache-server.log < dataset/apache/access_log.txt</code>
+  * Kinesis setup steps (and more) at
+  * https://spark.apache.org/docs/latest/streaming-kinesis-integration.html
   */
-object KafkaDStreamExample {
+object KinesisExample {
 
   def main(args: Array[String]) {
 
     // Create the context with a 1 second batch size
-    val ssc = new StreamingContext("local[*]", "KafkaExample", Seconds(1))
+    val ssc = new StreamingContext("local[*]", "KinesisExample", Seconds(1))
 
     setupLogging()
 
     // Construct a regular expression (regex) to extract fields from raw Apache log lines
     val pattern = apacheLogPattern()
 
-    // hostname:port for Kafka brokers, not Zookeeper
-    val kafkaParams = Map("metadata.broker.list" -> "localhost:9092")
-    // List of topics you want to listen for from Kafka
-    val topics = List("message.apache-server.log").toSet
-    // Create our Kafka stream, which will contain (topic,message) pairs. We tack a
-    // map(_._2) at the end in order to only get the messages, which contain individual
-    // lines of data.
-    val lines = KafkaUtils
-      .createDirectStream[String, String, StringDecoder, StringDecoder](
-        ssc,
-        kafkaParams,
-        topics
-      )
-      .map(_._2)
+    // Create a Kinesis stream. You must create an app name unique for this region, and specify
+    // stream name, Kinesis endpoint, and region you want.
+    val kinesisStream = KinesisUtils.createStream(
+      ssc,
+      "Unique App Name",
+      "Stream Name",
+      "kinesis.us-east-1.amazonaws.com",
+      "us-east-1",
+      InitialPositionInStream.LATEST,
+      Duration(2000),
+      StorageLevel.MEMORY_AND_DISK_2
+    )
+
+    // This gives you a byte array for each message. Let's assume these represent strings.
+    val lines = kinesisStream.map(x => new String(x))
 
     // Extract the request field from each log line
     val requests = lines.map(x => {

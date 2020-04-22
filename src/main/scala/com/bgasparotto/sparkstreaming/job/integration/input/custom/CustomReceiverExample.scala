@@ -1,4 +1,4 @@
-package com.bgasparotto.sparkstreaming.job.integration.custom
+package com.bgasparotto.sparkstreaming.job.integration.input.custom
 
 import java.io.{BufferedReader, InputStreamReader}
 import java.net.Socket

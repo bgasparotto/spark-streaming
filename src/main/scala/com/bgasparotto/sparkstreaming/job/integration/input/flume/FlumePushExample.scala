@@ -1,4 +1,4 @@
-package com.bgasparotto.sparkstreaming.job.integration.flume
+package com.bgasparotto.sparkstreaming.job.integration.input.flume
 
 import java.util.regex.Matcher
 
