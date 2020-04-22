@@ -76,3 +76,9 @@ the session is closed at the end of the code.
 - Similar to Kafka, but as a service hosted in AWS;
 - Shards have a similar purpose as a Kafka broker;
 - It's needed to add the dependency spark-streaming-kinesis-asl (it's not built in Spark);
+
+### Custom Integration
+- In order to create a custom receiver implementation:
+  1. Create a subclass of `org.apache.spark.streaming.receiver.Receiver`;
+  2. Implement `onStart()`, `onStop()` and `receive()` methods;
+  3. Create a DStream using `ssc.receiverStream(new CustomReceiver(params))`
