@@ -89,3 +89,11 @@ the session is closed at the end of the code.
   1. Add the spark-cassandra-connector dependency;
   2. Set `spark.cassandra.connection.host` on your spark conf;
   3. Use `rdd.saveToCassandra` to store tuples into named columns in a specific Cassandra table.
+
+## Stateful Spark Streaming
+- Maintains state across batches, such as running totals, lists, etc;
+- Use `DStream.mapWithState(stateSpec)`, but also:
+  1. Define a data type using a case class;
+  2. Provide a `StateSpec.function` implementation;
+  3. Create a `DStream` as usual;
+  4. Invoke `mapWithState(yourStateSpecFunction)` on your `DStream`.
