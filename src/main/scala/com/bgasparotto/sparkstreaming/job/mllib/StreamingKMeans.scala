@@ -12,7 +12,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
   * clusters.
   *
   * Before running the class, publish the messages:
-  * Train data: `nc -kl 9999 -i 1 < dataset/kmeans/kmeans-train.txt`
+  * Train data: `nc -kl 9999 < dataset/kmeans/kmeans-train.txt`
   * Test data: `nc -kl 7777 -i 1 < dataset/kmeans/kmeans-test.txt`
   */
 object StreamingKMeans {
