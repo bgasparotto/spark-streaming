@@ -97,3 +97,14 @@ the session is closed at the end of the code.
   2. Provide a `StateSpec.function` implementation;
   3. Create a `DStream` as usual;
   4. Invoke `mapWithState(yourStateSpecFunction)` on your `DStream`.
+
+## Spark MLLib
+- In MLLib terminology, a Vector format consists of data separated by commas and enclosed by brackets:
+`[someid,22,98]` whereas `someid` is a common id, `98` and `xx` could be two features such as income and age.
+- A Labeled Point is the data with the result, such as test data.
+
+### K-Means
+- K-Means clustering is an unsupervised model which attempts to split data into K groups that are closest to K centroids;
+- To create a new model, instantiate it with `new StreamingKMeans()`;
+- Use the method `model.trainOn()` to train your model;
+- Use `model.predictOnValues()` to run a prediction
