@@ -108,3 +108,12 @@ the session is closed at the end of the code.
 - To create a new model, instantiate it with `new StreamingKMeans()`;
 - Use the method `model.trainOn()` to train your model;
 - Use `model.predictOnValues()` to run a prediction
+
+### Linear Regression
+- Linear regression is a supervised model which fits a line to a data set of observations;
+- The simplest way of doing it is by using the technique of Least Squares, which is useful for uni-dimensional data.
+- Spark Streaming, however, uses the complex model Stochastic Gradient Descent (SGD), which is friendlier to multi-dimensional data.
+- Create a new model with `new StreamingLinearRegressionWithSGD()`;
+- SGD doesn't handle feature scaling well. It assumes your data is similar to a normal distribution, such as: -2 -1 0 1 2 etc;
+- To make it work, you need to scale your data down and back up again when you're done.
+- It also assumes your y-intercept is 0, unless you call `model.algorithm.setIntercept(true)`;
