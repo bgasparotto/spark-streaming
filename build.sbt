@@ -20,3 +20,8 @@ libraryDependencies ++= Seq(
   "org.apache.spark" % "spark-streaming-kinesis-asl_2.11" % sparkVersion,
   "com.datastax.spark" % "spark-cassandra-connector_2.11" % "2.4.3"
 )
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", _*) => MergeStrategy.discard
+  case _ => MergeStrategy.first
+}
