@@ -117,3 +117,12 @@ the session is closed at the end of the code.
 - SGD doesn't handle feature scaling well. It assumes your data is similar to a normal distribution, such as: -2 -1 0 1 2 etc;
 - To make it work, you need to scale your data down and back up again when you're done.
 - It also assumes your y-intercept is 0, unless you call `model.algorithm.setIntercept(true)`;
+
+## Running on AWS EMR (Elastic Map Reduce)
+- Bear in mind that `--master` is overridden by `SparkConf`;
+- The parameter `--executor-memory` is commonly used to make sure Spark doesn't try to use more memory than available;
+- The parameter `--total-executor-cores` do a similar job in regards to CPU;
+- When using Hadoop Yarn as the cluster manager, the parameter `--num-executors` is mandatory;
+- Always understand the hardware you are running it on.
+- 9 out of 10 times a Spark job fails is because of not enough resources.
+- For integration with S3, on Spark you can specific a S3 url using the S3N protocol from your driver scripts, e.g. `sc.textFile("s3n://your_url/your_file")`
