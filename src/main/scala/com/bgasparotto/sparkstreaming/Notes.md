@@ -120,9 +120,38 @@ the session is closed at the end of the code.
 
 ## Running on AWS EMR (Elastic Map Reduce)
 - Bear in mind that `--master` is overridden by `SparkConf`;
-- The parameter `--executor-memory` is commonly used to make sure Spark doesn't try to use more memory than available;
+- The parameter `--executor-memory` is commonly used to make sure Spark doesn't try to use more memory than available. It sets the Java heap memory under the hood.
 - The parameter `--total-executor-cores` do a similar job in regards to CPU;
 - When using Hadoop Yarn as the cluster manager, the parameter `--num-executors` is mandatory;
 - Always understand the hardware you are running it on.
 - 9 out of 10 times a Spark job fails is because of not enough resources.
 - For integration with S3, on Spark you can specific a S3 url using the S3N protocol from your driver scripts, e.g. `sc.textFile("s3n://your_url/your_file")`
+
+## Tuning and Troubleshooting on a cluster
+- Spark UI can be accessed via browser on port 4040;
+- For AWS EMR, open a ssh tunnel following the instructions on AWS console next to the "connections" item;
+
+## Performance tips
+- Use `cache()` or `persist()` if you perform multiple actions on an RDD/DataFrame;
+- Don't make your executor memory too large.
+- Think about partitioning vs your cluster size. Use `repartition()` when appropriate to get better parallelism.
+  Usually, you'd like to `repartition(n)` where `n` is the number of executors.
+- In contrast, when shrinking an RDD/DataFrame, use `coalesce()` instead of `repartition()` to avoid data shuffling.
+- Use Kryo serialisation instead of Java serialisation. Kryo is more efficient but doesn't come enable by default because you must manually register your classes:
+```
+conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+conf.registerKryoClasses(Array(classOf[MyClass1], classOf[MyClass2]))
+```
+
+## Stability tips
+- Use Mesos or YARN
+- Use Zookeeper or Kubernetes
+- Chose `--total-executor-cores` and `--executor-memory` wisely. AWS EMR tries to set that up automatically.
+- Make sure your receivers are reliable;
+- Create checkpoints;
+- Make sure your logs are accessible and durable so you can look at them.
+
+## Learning More
+- Book Learning Real-time processing with Spark Streaming from Gupta (Packt);
+- Learning Spark (O'Reilly)
+- Official site spark.apache.org
