@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
 
   # Spark master (driver)
@@ -25,6 +25,8 @@ services:
       - "SPARK_MASTER=spark://spark-master:7077"
     volumes:
       - ./dataset:/dataset
+    deploy:
+      replicas: 3
 
   # Zookeeper and Kafka
   zookeeper:
